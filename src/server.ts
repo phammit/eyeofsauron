@@ -8,7 +8,7 @@ import mongo from "mongodb";
 import assert from 'assert';
 import mongoose, { Schema , model, Model, Document } from 'mongoose';
 //import { User, testUserModel } from './models/testUser';
-import { User, testSchema } from './models/testUser';
+import UserModel, { User, testSchema } from './models/testUser';
 import { connect } from './util/mongoTestService';
 
 const MONGODB_USER = 'root';
@@ -20,9 +20,9 @@ const dbName = 'test-mongodb';
 
 const start = async () => {
 
-    //mongoose 
+    //mongoose .. connect to database .. need to factor out to database service
     await mongoose.connect(`${url}/${dbName}`);
-    const User = mongoose.model<User>('testusers', testSchema);
+    //const User = mongoose.model<User>('testusers', testSchema);
     /**
     await User.create([
         { name: 'Monster', address: '20 fenwick'},
@@ -30,7 +30,8 @@ const start = async () => {
         { name: 'John', address: '2810 deerwood' }
     ])
     */
-    const query = await User.find();
+    //using model from testUser.ts
+    const query = await UserModel.find();
     console.log(query);
 
     const { app } = await bootstrap();

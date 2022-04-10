@@ -18,16 +18,16 @@ const app_1 = require("./app");
 const http_1 = require("http");
 const mongoose_1 = __importDefault(require("mongoose"));
 //import { User, testUserModel } from './models/testUser';
-const testUser_1 = require("./models/testUser");
+const testUser_1 = __importDefault(require("./models/testUser"));
 const MONGODB_USER = 'root';
 const MONGODB_PASSWORD = 'root_password';
 const url = 'mongodb://localhost:27017';
 //const dbName = 'poc-mongodb';
 const dbName = 'test-mongodb';
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
-    //mongoose 
+    //mongoose .. connect to database .. need to factor out to database service
     yield mongoose_1.default.connect(`${url}/${dbName}`);
-    const User = mongoose_1.default.model('testusers', testUser_1.testSchema);
+    //const User = mongoose.model<User>('testusers', testSchema);
     /**
     await User.create([
         { name: 'Monster', address: '20 fenwick'},
@@ -35,7 +35,8 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
         { name: 'John', address: '2810 deerwood' }
     ])
     */
-    const query = yield User.find();
+    //using model from testUser.ts
+    const query = yield testUser_1.default.find();
     console.log(query);
     const { app } = yield (0, app_1.bootstrap)();
     dotenv_1.default.config();

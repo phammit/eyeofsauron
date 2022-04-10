@@ -16,7 +16,7 @@ export let testSchema = new Schema<User>({
 });
 
 //create a model
-export default mongoose.model<User>('users', testSchema);
+export default mongoose.model<User>('testusers', testSchema);
 
 
 

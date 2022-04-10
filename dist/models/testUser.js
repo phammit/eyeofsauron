@@ -28,4 +28,4 @@ exports.testSchema = new mongoose_1.Schema({
     address: { type: String, required: true },
 });
 //create a model
-exports.default = mongoose_1.default.model('users', exports.testSchema);
+exports.default = mongoose_1.default.model('testusers', exports.testSchema);
