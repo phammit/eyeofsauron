@@ -21,15 +21,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.disconnect = exports.connect = exports.collections = void 0;
 const Mongoose = __importStar(require("mongoose"));
@@ -65,9 +56,9 @@ const connect = () => {
     }
     Mongoose.connect(`${url}/${dbName}`);
     database = Mongoose.connection;
-    database.once('open', () => __awaiter(void 0, void 0, void 0, function* () {
+    database.once('open', async () => {
         console.log("Connected to mongodb database running in docker");
-    }));
+    });
     database.on("error", () => {
         console.log("Oops, there is some error connected to mongodb in docker");
     });

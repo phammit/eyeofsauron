@@ -8,19 +8,32 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createSchema = exports.TodoInput = exports.Todo = exports.User = exports.LNChannel = void 0;
+exports.createSchema = exports.TodoInput = exports.Todo = exports.User = exports.LNChannel = exports.TestUser = void 0;
 require("reflect-metadata"); //import b/f type-graphql for type reflection
 const type_graphql_1 = require("type-graphql");
+//test with data structure from testUser.ts 
+//          name: string, address: string
+//using TypeScript classes and decorators.. using TypeGraphLQL
+//https://www.npmjs.com/package/type-graphql  or https://typegraphql.com/
+let TestUser = class TestUser {
+};
+__decorate([
+    (0, type_graphql_1.Field)(type => type_graphql_1.ID),
+    __metadata("design:type", String)
+], TestUser.prototype, "id", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], TestUser.prototype, "name", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], TestUser.prototype, "address", void 0);
+TestUser = __decorate([
+    (0, type_graphql_1.ObjectType)()
+], TestUser);
+exports.TestUser = TestUser;
 let LNChannel = class LNChannel {
 };
 __decorate([
@@ -81,6 +94,6 @@ TodoInput = __decorate([
     (0, type_graphql_1.InputType)()
 ], TodoInput);
 exports.TodoInput = TodoInput;
-const createSchema = () => __awaiter(void 0, void 0, void 0, function* () {
-});
+const createSchema = async () => {
+};
 exports.createSchema = createSchema;

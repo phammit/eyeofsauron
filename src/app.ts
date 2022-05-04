@@ -3,9 +3,12 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import bodyParser  from 'body-parser';
+import container from './inversifly.config';
 //import { graphqlHTTP } from 'express-graphql';
 //import schema from './schema/schema.ts';
 import { createApolloServer } from './apolloServer';
+//import mongodb functionality
+import mongo from 'mongodb'
 
 export const bootstrap = async () => {
     const app: Express = express();
@@ -23,7 +26,7 @@ export const bootstrap = async () => {
     await apolloServer.start();
     apolloServer.applyMiddleware({app, path: '/graphql'});
 
-    return { app, apolloServer}
+    return { app, container, apolloServer}
 };
 /** 
 app.use('/graphql', graphqlHTTP({

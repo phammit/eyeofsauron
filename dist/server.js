@@ -1,32 +1,24 @@
 "use strict";
 //import { graphqlHTTP } from 'express-graphql';
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
 const dotenv_1 = __importDefault(require("dotenv"));
 const app_1 = require("./app");
 const http_1 = require("http");
-const mongoose_1 = __importDefault(require("mongoose"));
-//import { User, testUserModel } from './models/testUser';
-const testUser_1 = __importDefault(require("./models/testUser"));
+//import { connect } from './util/mongoTestService';
+const testUserService_1 = require("./util/testUserService");
+//import { TestUserService } from './util/testUserService';
 const MONGODB_USER = 'root';
 const MONGODB_PASSWORD = 'root_password';
 const url = 'mongodb://localhost:27017';
 //const dbName = 'poc-mongodb';
 const dbName = 'test-mongodb';
-const start = () => __awaiter(void 0, void 0, void 0, function* () {
+const start = async () => {
     //mongoose .. connect to database .. need to factor out to database service
-    yield mongoose_1.default.connect(`${url}/${dbName}`);
+    //await mongoose.connect(`${url}/${dbName}`);
     //const User = mongoose.model<User>('testusers', testSchema);
     /**
     await User.create([
@@ -36,9 +28,15 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
     ])
     */
     //using model from testUser.ts
-    const query = yield testUser_1.default.find();
-    console.log(query);
-    const { app } = yield (0, app_1.bootstrap)();
+    //const query = await UserModel.find();
+    //console.log(query);
+    //await connect();
+    //@inject(TestUserService)
+    //public testUserService: TestUserService;
+    //await TestUserService.connect();
+    const testUserService = new testUserService_1.TestUserService();
+    await testUserService.connect();
+    const { app } = await (0, app_1.bootstrap)();
     dotenv_1.default.config();
     const PORT = process.env.PORT || 3001;
     app.set("port", PORT);
@@ -152,7 +150,7 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     */
     //testing
-});
+};
 start().catch(err => console.log(err));
 /**
 function getErrorMessage(error: unknown) {

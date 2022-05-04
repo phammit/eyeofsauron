@@ -1,11 +1,21 @@
 import 'reflect-metadata'; //import b/f type-graphql for type reflection
-import { Field, ObjectType, InputType } from 'type-graphql';
+import { Field, ObjectType, InputType, ID } from 'type-graphql';
 
+//test with data structure from testUser.ts 
+//          name: string, address: string
+//using TypeScript classes and decorators.. using TypeGraphLQL
+//https://www.npmjs.com/package/type-graphql  or https://typegraphql.com/
+@ObjectType()
+export class TestUser {
+    @Field(type => ID)
+    id: string
 
+    @Field()
+    name: string
 
-
-
-
+    @Field()
+    address: string
+}
 
 
 @ObjectType()

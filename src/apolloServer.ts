@@ -11,7 +11,7 @@ import "dotenv/config";
 
 const typeDefs = `
     type Query { 
-        totalPost: Int!
+        totalPost: Int
     }
 `;
 

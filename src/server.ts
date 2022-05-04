@@ -1,15 +1,22 @@
 //import { graphqlHTTP } from 'express-graphql';
 
+import 'reflect-metadata';
 import dotenv from 'dotenv';
 import { bootstrap } from './app';
 import { createServer } from "http";
+import { injectable , inject } from 'inversify';
+
 import mongo from "mongodb";
 //import { assert } from 'console';
 import assert from 'assert';
 import mongoose, { Schema , model, Model, Document } from 'mongoose';
 //import { User, testUserModel } from './models/testUser';
 import UserModel, { User, testSchema } from './models/testUser';
-import { connect } from './util/mongoTestService';
+//import { connect } from './util/mongoTestService';
+import { connect, TestUserService } from './util/testUserService';
+import container from './inversifly.config';
+import testUser from './models/testUser';
+//import { TestUserService } from './util/testUserService';
 
 const MONGODB_USER = 'root';
 const MONGODB_PASSWORD = 'root_password';
@@ -21,7 +28,7 @@ const dbName = 'test-mongodb';
 const start = async () => {
 
     //mongoose .. connect to database .. need to factor out to database service
-    await mongoose.connect(`${url}/${dbName}`);
+    //await mongoose.connect(`${url}/${dbName}`);
     //const User = mongoose.model<User>('testusers', testSchema);
     /**
     await User.create([
@@ -31,8 +38,14 @@ const start = async () => {
     ])
     */
     //using model from testUser.ts
-    const query = await UserModel.find();
-    console.log(query);
+    //const query = await UserModel.find();
+    //console.log(query);
+    //await connect();
+    //@inject(TestUserService)
+    //public testUserService: TestUserService;
+    //await TestUserService.connect();
+    const testUserService = new TestUserService();
+    await testUserService.connect();
 
     const { app } = await bootstrap();
 
