@@ -24,8 +24,10 @@ exports.testSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 //create a schema corresponding to the document interface: User
 exports.testSchema = new mongoose_1.Schema({
+    id: { type: String },
     name: { type: String, required: true },
     address: { type: String, required: true },
 });
 //create a model
-exports.default = mongoose_1.default.model('testusers', exports.testSchema);
+//'testusers' will be the 
+exports.default = mongoose_1.default.model('test', exports.testSchema);

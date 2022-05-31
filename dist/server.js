@@ -8,8 +8,6 @@ require("reflect-metadata");
 const dotenv_1 = __importDefault(require("dotenv"));
 const app_1 = require("./app");
 const http_1 = require("http");
-//import { connect } from './util/mongoTestService';
-const testUserService_1 = require("./util/testUserService");
 //import { TestUserService } from './util/testUserService';
 const MONGODB_USER = 'root';
 const MONGODB_PASSWORD = 'root_password';
@@ -34,8 +32,16 @@ const start = async () => {
     //@inject(TestUserService)
     //public testUserService: TestUserService;
     //await TestUserService.connect();
-    const testUserService = new testUserService_1.TestUserService();
+    /**  this works, needed to initiate TestUserService class
+    const testUserService = new TestUserService();
     await testUserService.connect();
+    */
+    /**
+    //attemp to use testUserService
+     
+     
+    
+     */
     const { app } = await (0, app_1.bootstrap)();
     dotenv_1.default.config();
     const PORT = process.env.PORT || 3001;

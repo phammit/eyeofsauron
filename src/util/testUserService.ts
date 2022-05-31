@@ -34,7 +34,7 @@ export const collections: { users?: mongoDB.Collection } = {}
 }*/
 
 //interfaces
-export interface TestUserService{
+export interface TestUserServiceTYPE{
     connect(): Promise<any>;
     disconnect(): Promise<any>;
 }
@@ -74,23 +74,50 @@ export async function disconnect (){
 @injectable()
 export class TestUserService {
     public async connect(): Promise<any>{
+        console.log("welcome to Testuserservice");
         if (database) {
-            return;
+            console.log("already connected to mongodb")
+        } else {
+            await mongoose.connect(`${url}/${dbName}`)
+            database = mongoose.connection;
+            database.once('open', async () => {
+                console.log("Connected to mongodb database running in docker");
+            });
+            database.on("error", () => {
+                console.log("Oops, there is some error connected to mongodb in docker");
+            });
         }
-        await mongoose.connect(`${url}/${dbName}`)
-        database = mongoose.connection;
-        database.once('open', async () => {
-            console.log("Connected to mongodb database running in docker");
-        });
-        database.on("error", () => {
-            console.log("Oops, there is some error connected to mongodb in docker");
-        });
     
-        const query = await UserModel.find();
+        const query = await UserModel.find({ name: "John"});
         console.log(query);
         return query;
     
     };
+
+    public async addUser(user: User): Promise<any>{
+        console.log("Welcome to TestUserService: now attempting to add a user");
+        if (database) {
+            console.log("already connected to mongodb")
+        } else {
+            await mongoose.connect(`${url}/${dbName}`)
+            database = mongoose.connection;
+            database.once('open', async () => {
+                console.log("Connected to mongodb database running in docker");
+            });
+            database.on("error", () => {
+                console.log("Oops, there is some error connected to mongodb in docker");
+            });
+        }
+        //create a document instance using the model
+        var newUser = new UserModel({ id: user.id, address: user.address, name: user.name});
+        const mutation = await newUser.save(function (err, user) {
+            if (err) return console.log(err);
+            console.log(user.name + " has been save to mongodb database");
+        })
+        
+
+
+    }
     
     public async disconnect(): Promise<any>{
         if (!database) {

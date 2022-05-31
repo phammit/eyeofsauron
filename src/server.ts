@@ -44,8 +44,17 @@ const start = async () => {
     //@inject(TestUserService)
     //public testUserService: TestUserService;
     //await TestUserService.connect();
+    /**  this works, needed to initiate TestUserService class 
     const testUserService = new TestUserService();
     await testUserService.connect();
+    */
+
+    /**
+    //attemp to use testUserService 
+     
+     
+    
+     */
 
     const { app } = await bootstrap();
 

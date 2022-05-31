@@ -8,14 +8,19 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createSchema = exports.TodoInput = exports.Todo = exports.User = exports.LNChannel = exports.TestUser = void 0;
+exports.TodoInput = exports.Todo = exports.User = exports.LNChannel = exports.TestUserResolver = exports.AddUserInput = exports.TestUser = void 0;
 require("reflect-metadata"); //import b/f type-graphql for type reflection
 const type_graphql_1 = require("type-graphql");
+const testUserService_1 = require("../util/testUserService");
 //test with data structure from testUser.ts 
 //          name: string, address: string
 //using TypeScript classes and decorators.. using TypeGraphLQL
 //https://www.npmjs.com/package/type-graphql  or https://typegraphql.com/
+//for graphql sandbox - studio.apollographql.com/sandbox
 let TestUser = class TestUser {
 };
 __decorate([
@@ -34,6 +39,70 @@ TestUser = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], TestUser);
 exports.TestUser = TestUser;
+//defining @Arg types for mutation
+let AddUserInput = class AddUserInput {
+};
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], AddUserInput.prototype, "id", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], AddUserInput.prototype, "name", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], AddUserInput.prototype, "address", void 0);
+AddUserInput = __decorate([
+    (0, type_graphql_1.InputType)()
+], AddUserInput);
+exports.AddUserInput = AddUserInput;
+//need to create a TestUserService to retrieve query from mongoDB
+let TestUserResolver = class TestUserResolver {
+    constructor() {
+        //dependecy injecction
+        //constructor(private testUserService: TestUserService) {}
+        this.testUserService = new testUserService_1.TestUserService();
+    }
+    async testUser(name) {
+        console.log("you have reached the resolver, now attempting to connect to testUserService");
+        const value = await this.testUserService.connect();
+        console.log("value is: ", value);
+        return await this.testUserService.connect();
+    }
+    async addUser(id, name, address) {
+        console.log("Welcome to TestUserResolver mutation class addUser");
+        const newUser = Object.assign(new TestUser(), {
+            id: id,
+            name: name,
+            address: address
+        });
+        await this.testUserService.addUser(newUser);
+        return newUser;
+    }
+};
+__decorate([
+    (0, type_graphql_1.Query)(returns => [TestUser]),
+    __param(0, (0, type_graphql_1.Arg)("name", { defaultValue: "John" })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], TestUserResolver.prototype, "testUser", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => TestUser),
+    __param(0, (0, type_graphql_1.Arg)('id')),
+    __param(1, (0, type_graphql_1.Arg)('name')),
+    __param(2, (0, type_graphql_1.Arg)('address')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], TestUserResolver.prototype, "addUser", null);
+TestUserResolver = __decorate([
+    (0, type_graphql_1.Resolver)(TestUser)
+], TestUserResolver);
+exports.TestUserResolver = TestUserResolver;
+//for actaul EyeOfSauron data
 let LNChannel = class LNChannel {
 };
 __decorate([
@@ -94,6 +163,13 @@ TodoInput = __decorate([
     (0, type_graphql_1.InputType)()
 ], TodoInput);
 exports.TodoInput = TodoInput;
-const createSchema = async () => {
-};
-exports.createSchema = createSchema;
+/**
+export const createSchema = async () => {
+
+}
+*/
+/** NOT NEEDED HERE, create schema in apolloServer.ts file
+export const schema = buildSchema({
+    resolvers: [TestUserResolver],
+})
+*/ 

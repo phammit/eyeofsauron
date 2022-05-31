@@ -53,22 +53,48 @@ exports.disconnect = disconnect;
 ;
 let TestUserService = class TestUserService {
     async connect() {
+        console.log("welcome to Testuserservice");
         if (database) {
-            return;
+            console.log("already connected to mongodb");
         }
-        await mongoose_1.default.connect(`${url}/${dbName}`);
-        database = mongoose_1.default.connection;
-        database.once('open', async () => {
-            console.log("Connected to mongodb database running in docker");
-        });
-        database.on("error", () => {
-            console.log("Oops, there is some error connected to mongodb in docker");
-        });
-        const query = await testUser_1.default.find();
+        else {
+            await mongoose_1.default.connect(`${url}/${dbName}`);
+            database = mongoose_1.default.connection;
+            database.once('open', async () => {
+                console.log("Connected to mongodb database running in docker");
+            });
+            database.on("error", () => {
+                console.log("Oops, there is some error connected to mongodb in docker");
+            });
+        }
+        const query = await testUser_1.default.find({ name: "John" });
         console.log(query);
         return query;
     }
     ;
+    async addUser(user) {
+        console.log("Welcome to TestUserService: now attempting to add a user");
+        if (database) {
+            console.log("already connected to mongodb");
+        }
+        else {
+            await mongoose_1.default.connect(`${url}/${dbName}`);
+            database = mongoose_1.default.connection;
+            database.once('open', async () => {
+                console.log("Connected to mongodb database running in docker");
+            });
+            database.on("error", () => {
+                console.log("Oops, there is some error connected to mongodb in docker");
+            });
+        }
+        //create a document instance using the model
+        var newUser = new testUser_1.default({ id: user.id, address: user.address, name: user.name });
+        const mutation = await newUser.save(function (err, user) {
+            if (err)
+                return console.log(err);
+            console.log(user.name + " has been save to mongodb database");
+        });
+    }
     async disconnect() {
         if (!database) {
             return;

@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "lib": ["es5", "es6"],
+      "lib": ["es5", "es6", "esnext.asynciterable"],
       "module": "commonjs",
       "target": "es2019",
       "outDir": "dist",
@@ -18,3 +18,24 @@
   //moduleresolution: "Node", //module resolution is the process the compiler uses to 
                               //figure out what an import refers to
                               //https://medium.com/@tommedema/typescript-confusion-tsconfig-json-module-moduleresolution-target-lib-explained-65db2c44b491
+
+
+
+/**
+{
+    "compilerOptions": {
+      "lib": ["es5", "es6", "esnext.asynciterable"],
+      "module": "commonjs",
+      "target": "es2019",
+      "outDir": "dist",
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "strictPropertyInitialization": false,
+      "moduleResolution": "node"
+    }
+  }
+*/
