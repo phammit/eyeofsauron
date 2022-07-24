@@ -1,5 +1,6 @@
+import mongoose, { Schema } from 'mongoose';
 import 'reflect-metadata'; //import b/f type-graphql for type reflection
-import { Field, ObjectType, InputType, ID, Resolver, Query, Arg, Args, buildSchema, Mutation } from 'type-graphql';
+import { Field, ObjectType, InputType, ID, Resolver, Query, Arg, Args, buildSchema, Mutation, ArgsType } from 'type-graphql';
 import { TestUserService } from '../util/testUserService';
 
 //test with data structure from testUser.ts 
@@ -10,7 +11,7 @@ import { TestUserService } from '../util/testUserService';
 @ObjectType()
 export class TestUser {
     @Field(type => ID)
-    id: string
+    _id: Schema.Types.ObjectId
 
     @Field()
     name: string
@@ -19,11 +20,23 @@ export class TestUser {
     address: string
 }
 
+/** 
+@ArgsType()
+class GetUserArgs {
+    @Field(type => string, {defaultValue: "John"})
+    name: string;
+
+    @Field(type => string, {defulatValue: "2810 Deerwood"})
+    address: string;
+}
+*/
+
+/** 
 //defining @Arg types for mutation
 @InputType()
 export class AddUserInput implements Partial<TestUser> {
     @Field()
-    id: string
+    _id: Schema.Types.ObjectId
 
     @Field()
     name: string
@@ -31,6 +44,7 @@ export class AddUserInput implements Partial<TestUser> {
     @Field()
     address: string
 }
+*/
 
 //need to create a TestUserService to retrieve query from mongoDB
 @Resolver(TestUser)
@@ -40,30 +54,34 @@ export class TestUserResolver {
     testUserService = new TestUserService();
 
     @Query(returns => [TestUser])
-    async testUser(@Arg("name", {defaultValue: "John"}) name: string) {
+    async testUser(@Arg("name", {defaultValue: "John"}) name: string,) : Promise<TestUser[]> {
         console.log("you have reached the resolver, now attempting to connect to testUserService");
-        const value = await this.testUserService.connect();
+        const value = await this.testUserService.findUser(name);
         console.log("value is: ", value);
-        return await this.testUserService.connect();
+        return value;
     }
 
     @Mutation(() => TestUser)
     async addUser(
-            @Arg('id') id: string,
+            //@Arg('_id') _id: Schema.Types.ObjectId,
             @Arg('name') name: string,
             @Arg('address') address: string
     ) {
         console.log("Welcome to TestUserResolver mutation class addUser");
+        //for more complex app... make resolvers into a thin routing layer by putting business logic in one place -> data sources or model objects
+        //https://www.apollographql.com/docs/apollo-server/security/authentication/
         const newUser = Object.assign(new TestUser(), {
-            id: id,
+            _id: new mongoose.Types.ObjectId(),
             name: name,
             address: address
         });
+        console.log("this is the newUser I am trying to update: ", newUser);
         await this.testUserService.addUser(newUser);
         return newUser;
     }
 }
 
+/** 
 //for actaul EyeOfSauron data
 @ObjectType()
 export class LNChannel {
@@ -105,6 +123,7 @@ export class TodoInput implements Partial<Todo> {
     @Field()
     description: string
 }
+*/
 
 /** 
 export const createSchema = async () => {

@@ -12,11 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TestUserService = exports.disconnect = exports.connect = exports.collections = void 0;
+exports.TestUserService = exports.collections = void 0;
 const inversify_1 = require("inversify");
 //import * as mongoose from 'mongoose';
 const mongoose_1 = __importDefault(require("mongoose"));
-const testUser_1 = __importDefault(require("../models/testUser"));
+//import UserModel, { User, testSchema } from '../models/testUser';
+const testZoronUser_1 = __importDefault(require("../models/testZoronUser"));
 //import { TestUserService } from "../interfaces";
 //Global Variables
 exports.collections = {};
@@ -26,31 +27,31 @@ const url = 'mongodb://localhost:27017';
 const dbName = 'test-mongodb';
 //code from https://medium.com/swlh/using-typescript-with-mongodb-393caf7adfef
 let database;
-async function connect() {
+/**
+export async function connect() {
     if (database) {
         return;
     }
-    await mongoose_1.default.connect(`${url}/${dbName}`);
-    database = mongoose_1.default.connection;
+    await mongoose.connect(`${url}/${dbName}`)
+    database = mongoose.connection;
     database.once('open', async () => {
         console.log("Connected to mongodb database running in docker");
     });
     database.on("error", () => {
         console.log("Oops, there is some error connected to mongodb in docker");
     });
-    const query = await testUser_1.default.find();
+
+    const query = await UserModel.find();
     console.log(query);
-}
-exports.connect = connect;
-;
-async function disconnect() {
+
+};
+export async function disconnect (){
     if (!database) {
         return;
     }
-    mongoose_1.default.disconnect();
-}
-exports.disconnect = disconnect;
-;
+    mongoose.disconnect();
+};
+*/
 let TestUserService = class TestUserService {
     async connect() {
         console.log("welcome to Testuserservice");
@@ -67,19 +68,21 @@ let TestUserService = class TestUserService {
                 console.log("Oops, there is some error connected to mongodb in docker");
             });
         }
-        const query = await testUser_1.default.find({ name: "John" });
+        /** need to move into seperate query function
+        const query = await UserModel.find({ name: "John"});
         console.log(query);
         return query;
+        */
     }
     ;
     async addUser(user) {
         console.log("Welcome to TestUserService: now attempting to add a user");
+        /**
         if (database) {
-            console.log("already connected to mongodb");
-        }
-        else {
-            await mongoose_1.default.connect(`${url}/${dbName}`);
-            database = mongoose_1.default.connection;
+            console.log("already connected to mongodb")
+        } else {
+            await mongoose.connect(`${url}/${dbName}`)
+            database = mongoose.connection;
             database.once('open', async () => {
                 console.log("Connected to mongodb database running in docker");
             });
@@ -87,14 +90,26 @@ let TestUserService = class TestUserService {
                 console.log("Oops, there is some error connected to mongodb in docker");
             });
         }
+        */
+        //call connect()
+        this.connect();
         //create a document instance using the model
-        var newUser = new testUser_1.default({ id: user.id, address: user.address, name: user.name });
+        var newUser = new testZoronUser_1.default({ _id: user._id, address: user.address, name: user.name });
         const mutation = await newUser.save(function (err, user) {
             if (err)
                 return console.log(err);
             console.log(user.name + " has been save to mongodb database");
         });
     }
+    async findUser(name) {
+        this.connect();
+        var newUser = new testZoronUser_1.default();
+        const query = await testZoronUser_1.default.find({ name: name });
+        //const query = await newUser.findOneAndDelete({name: name});
+        console.log(query);
+        return query;
+    }
+    ;
     async disconnect() {
         if (!database) {
             return;

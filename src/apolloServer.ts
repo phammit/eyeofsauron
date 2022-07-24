@@ -5,7 +5,7 @@ import { TestUser, TestUserResolver } from "./schema/schema";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 //import { buildSchema } from "type-graphql";
 import { Field, ObjectType, InputType, ID, Resolver, Query, Arg, Args, buildSchema } from 'type-graphql';
-
+import { Schema } from "mongoose";
 
 import http from 'http';
 import "dotenv/config";
@@ -31,73 +31,76 @@ const resolvers = {
     },
 };
 
-//*****  below are type-graphql basic implementation to get graphql working before hooking up to mongoose models
-//mock data
-const mockData = [
-    {
-        id: "1234jdsfo324",
-        name: "John",
-        address: "some mock data address"
-    },
-    {
-        id: "ljjhlj4359uhsf",
-        name: "Monster",
-        address: "101 Monster Ave"
-    },
-    {
-        id: "voijnlfd235r98hjknaef",
-        name: "Tommy Dang",
-        address: "2030 Fenwick"
-    }
-];
+    /** 
+    //*****  below are type-graphql basic implementation to get graphql working before hooking up to mongoose models
+    //mock data
+    const mockData = [
+        {
+            id: "1234jdsfo324",
+            name: "John",
+            address: "some mock data address"
+        },
+        {
+            id: "ljjhlj4359uhsf",
+            name: "Monster",
+            address: "101 Monster Ave"
+        },
+        {
+            id: "voijnlfd235r98hjknaef",
+            name: "Tommy Dang",
+            address: "2030 Fenwick"
+        }
+    ];
+    */
 
+    //defining schema
+    @ObjectType()
+    export class User {
+        @Field(type => Schema.Types.ObjectId)
+        _id: string
 
-//defining schema
-@ObjectType()
-export class User {
-    @Field(type => ID)
-    id: string
+        @Field()
+        name: string
 
-    @Field()
-    name: string
-
-    @Field()
-    address: string
-}
-
-//defining resolver
-@Resolver(User)
-export class TestResolver {
-    @Query(returns => [User])
-    async testUser(@Arg("name", {defaultValue: "John"}) name: string) {
-        const items = mockData.filter(item => 
-            item.name === "John"
-        );
-        console.log(mockData[0].address);
-
-        const item = [{
-            id: "234jhkdsf98u32hjl",
-            name: "Name of Test",
-            address: "2810 Test Ave"
-        }];
-        return items;
-    }
-}
-
-/** 
-export const createSchema = async () => {
-
-    try {
-        return await buildSchema({
-            resolvers: [TestResolver],
-        });
-    } catch (err) {
-        throw err;
+        @Field()
+        address: string
     }
 
-};
-*/
-//*******  end of type-graphql basic implementation
+    /** 
+    //defining resolver
+    @Resolver(User)
+    export class TestResolver {
+        @Query(returns => [User])
+        async testUser(@Arg("name", {defaultValue: "John"}) name: string) {
+            const items = mockData.filter(item => 
+                item.name === "John"
+            );
+            console.log(mockData[0].address);
+
+            const item = [{
+                id: "234jhkdsf98u32hjl",
+                name: "Name of Test",
+                address: "2810 Test Ave"
+            }];
+            return items;
+        }
+    }
+    */
+
+    /** 
+    export const createSchema = async () => {
+
+        try {
+            return await buildSchema({
+                resolvers: [TestResolver],
+            });
+        } catch (err) {
+            throw err;
+        }
+
+    };
+    */
+    //*******  end of type-graphql basic implementation
 
 /** 
 const schema = async () => {

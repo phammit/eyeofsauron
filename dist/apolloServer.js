@@ -8,15 +8,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createApolloServer = exports.createSchema = exports.TestResolver = exports.User = void 0;
+exports.createApolloServer = exports.createSchema = exports.User = void 0;
 const apollo_server_express_1 = require("apollo-server-express");
 const schema_1 = require("./schema/schema");
 //import { buildSchema } from "type-graphql";
 const type_graphql_1 = require("type-graphql");
+const mongoose_1 = require("mongoose");
 require("dotenv/config");
 //import { buildSchema } from "graphql";
 //imported to test functionality
@@ -35,6 +33,7 @@ const resolvers = {
         totalPost: () => 42
     },
 };
+/**
 //*****  below are type-graphql basic implementation to get graphql working before hooking up to mongoose models
 //mock data
 const mockData = [
@@ -54,13 +53,14 @@ const mockData = [
         address: "2030 Fenwick"
     }
 ];
+*/
 //defining schema
 let User = class User {
 };
 __decorate([
-    (0, type_graphql_1.Field)(type => type_graphql_1.ID),
+    (0, type_graphql_1.Field)(type => mongoose_1.Schema.Types.ObjectId),
     __metadata("design:type", String)
-], User.prototype, "id", void 0);
+], User.prototype, "_id", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
     __metadata("design:type", String)
@@ -73,30 +73,26 @@ User = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], User);
 exports.User = User;
+/**
 //defining resolver
-let TestResolver = class TestResolver {
-    async testUser(name) {
-        const items = mockData.filter(item => item.name === "John");
+@Resolver(User)
+export class TestResolver {
+    @Query(returns => [User])
+    async testUser(@Arg("name", {defaultValue: "John"}) name: string) {
+        const items = mockData.filter(item =>
+            item.name === "John"
+        );
         console.log(mockData[0].address);
+
         const item = [{
-                id: "234jhkdsf98u32hjl",
-                name: "Name of Test",
-                address: "2810 Test Ave"
-            }];
+            id: "234jhkdsf98u32hjl",
+            name: "Name of Test",
+            address: "2810 Test Ave"
+        }];
         return items;
     }
-};
-__decorate([
-    (0, type_graphql_1.Query)(returns => [User]),
-    __param(0, (0, type_graphql_1.Arg)("name", { defaultValue: "John" })),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], TestResolver.prototype, "testUser", null);
-TestResolver = __decorate([
-    (0, type_graphql_1.Resolver)(User)
-], TestResolver);
-exports.TestResolver = TestResolver;
+}
+*/
 /**
 export const createSchema = async () => {
 

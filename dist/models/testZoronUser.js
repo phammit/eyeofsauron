@@ -20,15 +20,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.testSchema = void 0;
-//testing mongodb usage 
 const mongoose_1 = __importStar(require("mongoose"));
 //create a schema corresponding to the document interface: User
 exports.testSchema = new mongoose_1.Schema({
-    id: { type: String },
+    _id: { type: mongoose_1.Schema.Types.ObjectId },
     name: { type: String, required: true },
     address: { type: String, required: true },
 });
 //create a model
 //'testusers' will be the 
 //tests will be the collection name
-exports.default = mongoose_1.default.model('test', exports.testSchema);
+exports.default = mongoose_1.default.model('zoronusertest', exports.testSchema);

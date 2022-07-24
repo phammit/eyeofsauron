@@ -8,7 +8,8 @@ import * as dotenv from 'dotenv';
 import { injectable } from 'inversify';
 //import * as mongoose from 'mongoose';
 import mongoose, { Schema , model, Model, Document } from 'mongoose';
-import UserModel, { User, testSchema } from '../models/testUser';
+//import UserModel, { User, testSchema } from '../models/testUser';
+import UserModel, { ZoronUser, testSchema } from '../models/testZoronUser';
 //import { TestUserService } from "../interfaces";
 
 //Global Variables
@@ -43,8 +44,11 @@ const MONGODB_USER = 'root';
 const MONGODB_PASSWORD = 'root_password';
 const url = 'mongodb://localhost:27017';
 const dbName = 'test-mongodb';
+
+
 //code from https://medium.com/swlh/using-typescript-with-mongodb-393caf7adfef
 let database: mongoose.Connection;
+/** 
 export async function connect() {
     if (database) {
         return;
@@ -68,7 +72,7 @@ export async function disconnect (){
     }
     mongoose.disconnect();
 };
-
+*/
 
 
 @injectable()
@@ -88,14 +92,16 @@ export class TestUserService {
             });
         }
     
+        /** need to move into seperate query function
         const query = await UserModel.find({ name: "John"});
         console.log(query);
         return query;
-    
+        */
     };
 
-    public async addUser(user: User): Promise<any>{
+    public async addUser(user: ZoronUser): Promise<any>{
         console.log("Welcome to TestUserService: now attempting to add a user");
+        /** 
         if (database) {
             console.log("already connected to mongodb")
         } else {
@@ -108,16 +114,26 @@ export class TestUserService {
                 console.log("Oops, there is some error connected to mongodb in docker");
             });
         }
+        */
+        //call connect()
+        this.connect();
+
         //create a document instance using the model
-        var newUser = new UserModel({ id: user.id, address: user.address, name: user.name});
+        var newUser = new UserModel({ _id: user._id, address: user.address, name: user.name});
         const mutation = await newUser.save(function (err, user) {
             if (err) return console.log(err);
             console.log(user.name + " has been save to mongodb database");
         })
-        
-
-
     }
+
+    public async findUser(name: string): Promise<any>{
+        this.connect();
+        var newUser = new UserModel();
+        const query = await UserModel.find({ name: name});
+        //const query = await newUser.findOneAndDelete({name: name});
+        console.log(query);
+        return query;
+    };
     
     public async disconnect(): Promise<any>{
         if (!database) {

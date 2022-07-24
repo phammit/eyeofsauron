@@ -13,7 +13,7 @@ import mongoose, { Schema , model, Model, Document } from 'mongoose';
 //import { User, testUserModel } from './models/testUser';
 import UserModel, { User, testSchema } from './models/testUser';
 //import { connect } from './util/mongoTestService';
-import { connect, TestUserService } from './util/testUserService';
+import { TestUserService } from './util/testUserService';
 import container from './inversifly.config';
 import testUser from './models/testUser';
 //import { TestUserService } from './util/testUserService';

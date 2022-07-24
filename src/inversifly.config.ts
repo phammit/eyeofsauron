@@ -1,10 +1,11 @@
 import { Container } from 'inversify';
 import "reflect-metadata";
-import { TestUserService } from "./util/testUserService";
+import { TestUserService, TestUserServiceTYPE } from "./util/testUserService";
+//???need to import TYPES for TestUserService
 
 const container = new Container();
 
-container.bind<TestUserService>(TestUserService).to(TestUserService);
+container.bind<TestUserServiceTYPE>(TestUserService).to(TestUserService);
 //container.bind
 
 export default container;
